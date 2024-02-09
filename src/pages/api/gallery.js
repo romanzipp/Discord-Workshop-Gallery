@@ -52,7 +52,7 @@ export default async (req, res) => {
             }
         }
 
-        return Object.values(allMessages).map((message) => ({
+        return Object.values(allMessages).sort((a, b) => a.createdTimestamp - b.createdTimestamp).map((message) => ({
             ...message,
             attachments: message.attachments,
         }));
