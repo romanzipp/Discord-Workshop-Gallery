@@ -22,11 +22,10 @@ function Layout({ centered, children }) {
 
     return (
         <main className={classNames(
-            'dark bg-black text-white min-h-screen w-full',
+            'bg-black text-white min-h-screen w-full',
             inter.className,
         )}
         >
-
             <nav className="flex min-h-10 justify-between border-b border-white/30">
                 <div className="flex items-center px-3 font-bold">
                     Workshop Gallery

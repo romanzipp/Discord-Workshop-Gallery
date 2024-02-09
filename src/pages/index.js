@@ -1,9 +1,17 @@
 import Image from 'next/image';
 import { useSession, signIn } from 'next-auth/react';
-import { useState, Fragment, useMemo } from 'react';
+import {
+    useState, Fragment, useMemo, useEffect,
+} from 'react';
 import { useRouter } from 'next/router';
 import moment from 'moment';
 import classNames from 'classnames';
+import rehypeSanitize from 'rehype-sanitize';
+import rehypeStringify from 'rehype-stringify';
+import remarkParse from 'remark-parse';
+import remarkRehype from 'remark-rehype';
+import { unified } from 'unified';
+import remarkBreaks from 'remark-breaks';
 import Layout from '@/components/layout';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
@@ -11,6 +19,14 @@ import { useGallery, useGuilds, useChannels } from '@/lib/api';
 import {
     SelectTrigger, Select, SelectValue, SelectContent, SelectItem,
 } from '@/components/ui/select';
+import {
+    AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
+import UserPreview from '@/components/user-preview';
+import {
+    Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious,
+} from '@/components/ui/carousel';
+import alertStyles from '@/styles/alert.module.css';
 
 function LoginPage() {
     return (
@@ -140,6 +156,29 @@ function GalleryPage({ galleryData }) {
 
     // Component
 
+    const [selectedMessage, setSelectedMessage] = useState(null);
+    const [selectedMessageContent, setSelectedMessageContent] = useState(null);
+
+    useEffect(() => {
+        (async () => {
+            if (!selectedMessage) {
+                return;
+            }
+
+            const contentHtml = await unified()
+                .use(remarkParse)
+                .use(remarkRehype)
+                .use(remarkBreaks)
+                .use(rehypeSanitize)
+                .use(rehypeStringify)
+                .process(selectedMessage.content);
+
+            setSelectedMessageContent(
+                String(contentHtml),
+            );
+        })();
+    }, [selectedMessage]);
+
     const computedMessages = useMemo(() => galleryData?.data?.map((message) => ({
         ...message,
         award: itemAwards.find((itemAward) => itemAward.messageId === message.id)?.award,
@@ -194,6 +233,7 @@ function GalleryPage({ galleryData }) {
                         key={message.id}
                         onDragOver={(event) => onItemAllowDrop(event)}
                         onDrop={(event) => onItemDrop(event)}
+                        onClick={() => setSelectedMessage(message)}
                         data-message={message.id}
                         className={classNames(
                             message.award ? [message.award.appliedClassName] : 'hover:bg-white/10',
@@ -223,16 +263,7 @@ function GalleryPage({ galleryData }) {
 
                         {message.author && (
                             <div className="flex items-center justify-between gap-2 text-sm font-medium">
-                                <div className="flex items-center gap-2 text-white/90">
-                                    <Image
-                                        src={message.author.avatarURL}
-                                        alt={message.author.username}
-                                        height={24}
-                                        width={24}
-                                        className="rounded-full"
-                                    />
-                                    {message.author.globalName}
-                                </div>
+                                <UserPreview author={message.author} />
                                 <div className="text-xs text-white/60">
                                     {moment(message.createdTimestamp).fromNow()}
                                 </div>
@@ -252,6 +283,52 @@ function GalleryPage({ galleryData }) {
 
                 ))}
             </div>
+
+            {selectedMessage && (
+                <AlertDialog
+                    defaultOpen
+                    onOpenChange={(open) => !open && setSelectedMessage(null)}
+                >
+                    <AlertDialogTrigger>Open</AlertDialogTrigger>
+                    <AlertDialogContent className={classNames(alertStyles.alert, 'my-4 flex flex-col')}>
+                        <AlertDialogHeader>
+                            <AlertDialogTitle className="flex justify-center">
+                                <UserPreview author={selectedMessage.author} />
+                            </AlertDialogTitle>
+                            <div className="text-sm text-muted-foreground">
+                                <div className="mx-auto max-w-4xl px-4">
+                                    {selectedMessageContent && (
+                                        <div dangerouslySetInnerHTML={{ __html: selectedMessageContent }} />
+                                    )}
+                                </div>
+                            </div>
+                        </AlertDialogHeader>
+                        <div className="grow px-10">
+                            <Carousel className="h-full">
+                                <CarouselContent className="h-full">
+                                    {selectedMessage.attachments?.map((attachment) => (
+                                        <Fragment key={attachment.id}>
+                                            <CarouselItem className="relative h-full">
+                                                <img
+                                                    src={attachment.url}
+                                                    className="absolute size-full object-contain"
+                                                    alt=""
+                                                />
+                                            </CarouselItem>
+                                        </Fragment>
+                                    ))}
+                                </CarouselContent>
+                                <CarouselPrevious />
+                                <CarouselNext />
+                            </Carousel>
+
+                        </div>
+                        <AlertDialogFooter className="flex justify-center">
+                            <AlertDialogCancel>Close</AlertDialogCancel>
+                        </AlertDialogFooter>
+                    </AlertDialogContent>
+                </AlertDialog>
+            )}
         </Layout>
     );
 }

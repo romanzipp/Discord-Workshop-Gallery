@@ -18,7 +18,7 @@ export default async (req, res) => {
         const guild = await client.guilds.fetch(req.query.guild_id);
         const channel = await guild.channels.fetch(req.query.channel_id);
 
-        const before = null;
+        let before = null;
         let i = 0;
         const allMessages = {};
 
@@ -42,6 +42,7 @@ export default async (req, res) => {
                 }
 
                 allMessages[message.id] = message;
+                before = message.id;
 
                 return true;
             });
