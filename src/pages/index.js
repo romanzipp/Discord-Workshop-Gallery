@@ -2,6 +2,7 @@ import Image from 'next/image';
 import { useSession, signIn, signOut } from 'next-auth/react';
 import { useState, Fragment, useMemo } from 'react';
 import { useRouter } from 'next/router';
+import moment from 'moment';
 import Layout from '@/components/layout';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
@@ -137,9 +138,79 @@ export default function Home() {
         );
     }
 
+    if (!galleryData || !galleryData?.data) {
+        return (
+            <Layout centered>
+                loading messages...
+            </Layout>
+        );
+    }
+
     return (
         <Layout>
-            hello
+            <div className="fixed right-0 flex h-full w-24 items-center">
+                <div className="w-full rounded-l-md border border-r-0 border-white/30 p-4 shadow-lg shadow-white/10">
+                    <div className="text-center text-sm font-semibold uppercase">
+                        Awards
+                    </div>
+
+                    <div className="mt-4 flex flex-col gap-4">
+                        <div className="flex size-16 items-center justify-center rounded-full bg-red-900/60 p-6 transition-transform hover:scale-105">1.</div>
+                        <div className="flex size-16 items-center justify-center rounded-full bg-orange-900/60 p-6 transition-transform hover:scale-105">2.</div>
+                        <div className="flex size-16 items-center justify-center rounded-full bg-yellow-900/60 p-6 transition-transform hover:scale-105">3.</div>
+                        <div className="flex size-16 items-center justify-center rounded-full bg-green-900/60 p-6 transition-transform hover:scale-105">4.</div>
+                        <div className="flex size-16 items-center justify-center rounded-full bg-blue-900/60 p-6 transition-transform hover:scale-105">5.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div className="grid grid-cols-6 gap-4 p-4">
+                {galleryData.data.map((message) => (
+                    <div
+                        key={message.id}
+                        className="flex flex-col justify-between gap-4 rounded border border-white/30 p-2"
+                    >
+                        {message.attachments?.length > 0 && (
+                            <div>
+                                {message.attachments?.filter((attachment, index) => index < 1)?.map((attachment) => (
+                                    <div>
+                                        <img
+                                            src={attachment.url}
+                                            alt=""
+                                        />
+                                    </div>
+                                ))}
+                                {message.attachments.length > 1 && (
+                                    <div className="mt-2 text-xs font-medium text-white/60">
+                                        +
+                                        {message.attachments.length - 1}
+                                        {' '}
+                                        more
+                                    </div>
+                                )}
+                            </div>
+                        )}
+                        {message.author && (
+                            <div className="flex items-center justify-between gap-2 text-sm font-medium">
+                                <div className="flex items-center gap-2 text-white/90">
+                                    <Image
+                                        src={message.author.avatarURL}
+                                        alt={message.author.username}
+                                        height={24}
+                                        width={24}
+                                        className="rounded-full"
+                                    />
+                                    {message.author.globalName}
+                                </div>
+                                <div className="text-xs text-white/60">
+                                    {moment(message.createdTimestamp).fromNow()}
+                                </div>
+                            </div>
+                        )}
+                    </div>
+
+                ))}
+            </div>
         </Layout>
     );
 }

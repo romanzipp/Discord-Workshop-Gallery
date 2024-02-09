@@ -16,7 +16,11 @@ export default async (req, res) => {
         const messages = await channel.messages.fetch();
 
         console.log(messages);
-        return messages;
+
+        return messages.map((message) => ({
+            ...message,
+            attachments: message.attachments,
+        }));
     });
 
     const messagesResponse = await discord;

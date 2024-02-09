@@ -74,7 +74,9 @@ function Layout({ centered, children }) {
                 </div>
             </nav>
 
-            {inner}
+            <article className="relative">
+                {inner}
+            </article>
         </main>
     );
 }
