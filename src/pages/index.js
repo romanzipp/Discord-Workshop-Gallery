@@ -46,9 +46,28 @@ export default function Home() {
         });
     }
 
-    const gallery = useGallery({ session, selectedGuild });
-    const { data: guildsData, isLoading, isGuildsLoading } = useGuilds({ session, selectedGuild });
-    const xx = useChannels({ session, selectedGuild });
+    function onSelectChannel(value) {
+        router.push({
+            query: { ...router.query, channel: value },
+        });
+    }
+
+    const { data: galleryData } = useGallery({
+        session,
+        selectedGuild,
+        selectedChannel,
+    });
+
+    const { data: guildsData, isLoading, isGuildsLoading } = useGuilds({
+        session,
+        selectedGuild,
+    });
+
+    const { data: channelsData } = useChannels({
+        session,
+        selectedGuild,
+        selectedChannel,
+    });
 
     if (!session) {
         return <LoginPage />;
@@ -83,6 +102,37 @@ export default function Home() {
                     </Select>
                 )}
 
+            </Layout>
+        );
+    }
+
+    if (!selectedChannel) {
+        return (
+            <Layout centered>
+                {(channelsData && channelsData?.data) ? (
+                    <div>
+                        <Select onValueChange={(value) => onSelectChannel(value)}>
+                            <SelectTrigger className="w-[180px]">
+                                <SelectValue placeholder="Select Channel" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {channelsData?.data?.map((channel) => (
+                                    <Fragment key={channel.id}>
+                                        <SelectItem value={channel.id}>
+                                            <div className="flex items-center gap-2">
+                                                {channel.name}
+                                            </div>
+                                        </SelectItem>
+                                    </Fragment>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                    </div>
+                ) : (
+                    <div>
+                        loading channels...
+                    </div>
+                )}
             </Layout>
         );
     }

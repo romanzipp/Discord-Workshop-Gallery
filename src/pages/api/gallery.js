@@ -11,14 +11,17 @@ export default async (req, res) => {
 
     const discord = useDiscordBot(async (client) => {
         const guild = await client.guilds.fetch(req.query.guild_id);
-        const channels = await guild.channels.fetch();
+        const channel = await guild.channels.fetch(req.query.channel_id);
 
-        return channels.filter((channel) => channel.type === 0);
+        const messages = await channel.messages.fetch();
+
+        console.log(messages);
+        return messages;
     });
 
-    const channelsResponse = await discord;
+    const messagesResponse = await discord;
 
     res.send({
-        data: channelsResponse,
+        data: messagesResponse,
     });
 };

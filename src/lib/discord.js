@@ -1,3 +1,5 @@
+import { Client, GatewayIntentBits, Events } from 'discord.js';
+
 export function useDiscord(accessToken) {
     const makeRequest = async (url, options = {}) => {
         const response = await fetch(`https://discord.com${url}`, {
@@ -31,4 +33,29 @@ export function useDiscord(accessToken) {
     return {
         api: makeRequest,
     };
+}
+
+export function useDiscordBot(callback) {
+    return new Promise((resolve, reject) => {
+        const client = new Client({
+            intents: [
+                GatewayIntentBits.Guilds,
+                GatewayIntentBits.GuildMessages,
+                GatewayIntentBits.MessageContent,
+            ],
+        });
+
+        const loginTimeout = setTimeout(() => {
+            reject();
+        }, 15 * 1000);
+
+        client.once(Events.ClientReady, async (readyClient) => {
+            const response = await callback(readyClient);
+
+            clearTimeout(loginTimeout);
+            resolve(response);
+        });
+
+        client.login(process.env.BOT_TOKEN);
+    });
 }

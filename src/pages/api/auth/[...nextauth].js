@@ -8,7 +8,7 @@ export const authOptions = {
             clientSecret: process.env.DSICORD_CLIENT_SECRET,
             authorization: {
                 params: {
-                    scope: 'identify guilds messages.read',
+                    scope: 'bot identify guilds messages.read',
                 },
             },
         }),

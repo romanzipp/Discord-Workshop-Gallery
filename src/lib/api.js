@@ -6,11 +6,11 @@ async function jsonFetch(url, options) {
     return res.json();
 }
 
-export function useGallery({ session, selectedGuild }) {
+export function useGallery({ session, selectedGuild, selectedChannel }) {
     return useQuery({
         queryKey: ['gallery'],
-        queryFn: () => jsonFetch('/api/gallery'),
-        enabled: !!session && selectedGuild !== null,
+        queryFn: () => jsonFetch(`/api/gallery?guild_id=${selectedGuild}&channel_id=${selectedChannel}`),
+        enabled: !!session && !!selectedGuild && !!selectedChannel,
     });
 }
 
@@ -22,10 +22,10 @@ export function useGuilds({ session, selectedGuild }) {
     });
 }
 
-export function useChannels({ session, selectedGuild }) {
+export function useChannels({ session, selectedGuild, selectedChannel }) {
     return useQuery({
         queryKey: ['channels', selectedGuild],
         queryFn: () => jsonFetch(`/api/channels?guild_id=${selectedGuild}`),
-        enabled: !!session && !!selectedGuild,
+        enabled: !!session && !!selectedGuild && !selectedChannel,
     });
 }
