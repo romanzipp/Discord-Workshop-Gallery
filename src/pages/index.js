@@ -154,10 +154,51 @@ function GalleryPage({ galleryData }) {
         addAwardToMessage(messageId, draggingAward);
     };
 
+    const computedMessages = useMemo(() => galleryData?.data?.map((message) => ({
+        ...message,
+        award: itemAwards.find((itemAward) => itemAward.messageId === message.id)?.award,
+    })), [galleryData, itemAwards, awards]);
+
     // Component
 
     const [selectedMessage, setSelectedMessage] = useState(null);
     const [selectedMessageContent, setSelectedMessageContent] = useState(null);
+
+    const [nextMessage, prevMessage] = useMemo(() => {
+        if (!selectedMessage) {
+            return [null, null];
+        }
+
+        let hasPrev = false;
+        let prev = null;
+        let getNext = false;
+        let next = null;
+
+        for (const message of computedMessages) {
+            if (getNext && !next) {
+                next = message;
+            }
+
+            if (message.id === selectedMessage.id) {
+                hasPrev = true;
+                getNext = true;
+            }
+
+            if (!hasPrev) {
+                prev = message;
+            }
+        }
+
+        return [next, prev];
+    }, [selectedMessage, computedMessages]);
+
+    function selectMessagePrev() {
+        setSelectedMessage(prevMessage);
+    }
+
+    function selectMessageNext() {
+        setSelectedMessage(nextMessage);
+    }
 
     useEffect(() => {
         (async () => {
@@ -178,11 +219,6 @@ function GalleryPage({ galleryData }) {
             );
         })();
     }, [selectedMessage]);
-
-    const computedMessages = useMemo(() => galleryData?.data?.map((message) => ({
-        ...message,
-        award: itemAwards.find((itemAward) => itemAward.messageId === message.id)?.award,
-    })), [galleryData, itemAwards, awards]);
 
     return (
         <Layout>
@@ -323,8 +359,22 @@ function GalleryPage({ galleryData }) {
                             </Carousel>
 
                         </div>
-                        <AlertDialogFooter className="flex justify-center">
+                        <AlertDialogFooter className="gap-4">
+                            <Button
+                                onClick={() => selectMessagePrev()}
+                                disabled={!prevMessage}
+                                className="min-w-24"
+                            >
+                                Previous
+                            </Button>
                             <AlertDialogCancel>Close</AlertDialogCancel>
+                            <Button
+                                onClick={() => selectMessageNext()}
+                                disabled={!nextMessage}
+                                className="min-w-24"
+                            >
+                                Next
+                            </Button>
                         </AlertDialogFooter>
                     </AlertDialogContent>
                 </AlertDialog>
