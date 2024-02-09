@@ -232,7 +232,7 @@ function GalleryPage({ galleryData }) {
     return (
         <>
             <div className="fixed right-0 flex h-full w-24 items-center">
-                <div className="w-full rounded-l-md border border-r-0 border-white/30 p-4 shadow-lg shadow-white/10">
+                <div className="w-full rounded-l-md border border-r-0 border-white/20 p-4 shadow-lg shadow-white/10">
                     <div className="text-center text-sm font-semibold uppercase">
                         Awards
                     </div>
@@ -282,7 +282,7 @@ function GalleryPage({ galleryData }) {
                         data-message={message.id}
                         className={classNames(
                             message.award ? [message.award.appliedClassName] : 'hover:bg-white/10',
-                            'relative flex flex-col justify-between gap-4 rounded border border-white/30 p-2 transition-colors hover:shadow-lg hover:shadow-white/10',
+                            'relative flex flex-col justify-between gap-4 rounded border border-white/20 p-2 transition-colors hover:shadow-lg hover:shadow-white/10',
                         )}
                     >
                         {message.attachments?.length > 0 && (
