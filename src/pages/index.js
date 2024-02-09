@@ -52,6 +52,7 @@ function LoginPage() {
 }
 
 function findClosestMessage(el) {
+    // eslint-disable-next-line no-undef
     while (el && el !== document) {
         if (el.dataset.message) {
             return el;
@@ -412,7 +413,7 @@ export default function Home() {
         selectedChannel,
     });
 
-    const { data: guildsData, isLoading, isGuildsLoading } = useGuilds({
+    const { data: guildsData } = useGuilds({
         session,
         selectedGuild,
     });

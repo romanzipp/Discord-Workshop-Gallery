@@ -16,7 +16,6 @@ module.exports = {
     rules: {
         indent: ['error', 4],
         curly: ['error', 'all'],
-        'no-console': ['warn'],
         'max-len': 'off',
         'react/jsx-indent': ['error', 4],
         'react/jsx-indent-props': ['error', 4],
@@ -33,6 +32,17 @@ module.exports = {
                 'adsbygoogle',
             ],
         }],
+        'react/prop-types': 'off',
+        'react/jsx-props-no-spreading': 'off',
+        'import/no-unresolved': 'off',
+        'import/extensions': 'off',
+        '@next/next/no-img-element': 'off',
+        'no-console': 'off',
+        'no-param-reassign': 'off',
+        'react/jsx-filename-extension': 'off',
+        'jsx-a11y/heading-has-content': 'off',
+        'no-loop-func': 'off',
+        'no-restricted-syntax': 'off',
     },
     settings: {
         'import/resolver': {

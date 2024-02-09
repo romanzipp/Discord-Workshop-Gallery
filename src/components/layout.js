@@ -4,6 +4,7 @@ import classNames from 'classnames';
 import Link from 'next/link';
 import { useSession, signOut } from 'next-auth/react';
 import Image from 'next/image';
+import Head from 'next/head';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -26,6 +27,9 @@ function Layout({ centered, children }) {
             inter.className,
         )}
         >
+            <Head>
+                <title>Workshop Gallery</title>
+            </Head>
             <nav className="flex min-h-10 justify-between border-b border-white/30">
                 <div className="flex items-center px-3 font-bold">
                     Workshop Gallery
