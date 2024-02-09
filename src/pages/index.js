@@ -145,8 +145,6 @@ function GalleryPage({ galleryData }) {
         award: itemAwards.find((itemAward) => itemAward.messageId === message.id)?.award,
     })), [galleryData, itemAwards, awards]);
 
-    console.log(computedMessages);
-
     return (
         <Layout>
             <div className="fixed right-0 flex h-full w-24 items-center">
