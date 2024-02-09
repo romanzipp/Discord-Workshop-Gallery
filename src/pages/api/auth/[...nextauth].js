@@ -7,6 +7,11 @@ export const authOptions = {
         DiscordProvider({
             clientId: process.env.DSICORD_CLIENT_ID,
             clientSecret: process.env.DSICORD_CLIENT_SECRET,
+            authorization: {
+                params: {
+                    scope: 'guilds messages.read',
+                },
+            },
         }),
     ],
 };
