@@ -341,7 +341,7 @@ function GalleryPage({ galleryData }) {
                                 <UserPreview author={selectedMessage.author} />
                             </AlertDialogTitle>
                             <div className="text-sm text-muted-foreground">
-                                <div className="mx-auto max-w-4xl px-4">
+                                <div className="mx-auto max-h-48 max-w-4xl overflow-y-auto px-4">
                                     {selectedMessageContent && (
                                         <div dangerouslySetInnerHTML={{ __html: selectedMessageContent }} />
                                     )}
