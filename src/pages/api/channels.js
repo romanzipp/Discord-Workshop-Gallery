@@ -12,15 +12,16 @@ export default async (req, res) => {
     const discord = useDiscord(session.accessToken);
 
     try {
-        const guildsResponse = await discord.api('/api/users/@me/guilds');
+        const channelsResponse = await discord.api(`/api/guilds/${req.query.guild_id}/channels`);
 
         res.send({
-            data: guildsResponse,
+            data: channelsResponse,
         });
     } catch (err) {
         res.send({
-            error: err.message,
-            data: err,
+            error: 'error getting channels',
+            data: err?.data,
+            status: err?.status,
         });
     }
 };

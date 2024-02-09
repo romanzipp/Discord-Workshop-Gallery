@@ -16,8 +16,16 @@ export function useGallery({ session, selectedGuild }) {
 
 export function useGuilds({ session, selectedGuild }) {
     return useQuery({
-        queryKey: ['gallery'],
+        queryKey: ['guilds'],
         queryFn: () => jsonFetch('/api/guilds'),
-        enabled: !!session && selectedGuild === null,
+        enabled: !!session && !selectedGuild,
+    });
+}
+
+export function useChannels({ session, selectedGuild }) {
+    return useQuery({
+        queryKey: ['channels', selectedGuild],
+        queryFn: () => jsonFetch(`/api/channels?guild_id=${selectedGuild}`),
+        enabled: !!session && !!selectedGuild,
     });
 }

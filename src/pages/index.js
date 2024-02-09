@@ -1,10 +1,11 @@
 import Image from 'next/image';
 import { useSession, signIn, signOut } from 'next-auth/react';
-import { useState, Fragment } from 'react';
+import { useState, Fragment, useMemo } from 'react';
+import { useRouter } from 'next/router';
 import Layout from '@/components/layout';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
-import { useGallery, useGuilds } from '@/lib/api';
+import { useGallery, useGuilds, useChannels } from '@/lib/api';
 import {
     SelectTrigger, Select, SelectValue, SelectContent, SelectItem,
 } from '@/components/ui/select';
@@ -34,30 +35,32 @@ function LoginPage() {
 
 export default function Home() {
     const { data: session } = useSession();
+    const router = useRouter();
 
-    const [selectedGuild, setSelectedGuild] = useState(null);
-    const [selectedChannel, setSelectedChannel] = useState(null);
+    const selectedGuild = useMemo(() => router.query.guild, [router]);
+    const selectedChannel = useMemo(() => router.query.channel, [router]);
 
     function onSelectGuild(value) {
-        setSelectedGuild(value);
+        router.push({
+            query: { guild: value },
+        });
     }
 
     const gallery = useGallery({ session, selectedGuild });
     const { data: guildsData, isLoading, isGuildsLoading } = useGuilds({ session, selectedGuild });
-
-    console.log(guildsData);
+    const xx = useChannels({ session, selectedGuild });
 
     if (!session) {
         return <LoginPage />;
     }
 
-    if (selectedGuild === null) {
+    if (!selectedGuild) {
         return (
             <Layout centered>
                 {(guildsData && guildsData?.data) && (
                     <Select onValueChange={(value) => onSelectGuild(value)}>
                         <SelectTrigger className="w-[180px]">
-                            <SelectValue placeholder="Server" />
+                            <SelectValue placeholder="Select Server" />
                         </SelectTrigger>
                         <SelectContent>
                             {guildsData?.data?.map((guild) => (
