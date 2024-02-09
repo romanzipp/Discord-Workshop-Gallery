@@ -1,18 +1,24 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Inter } from 'next/font/google';
 import classNames from 'classnames';
 import Link from 'next/link';
 import { useSession, signOut } from 'next-auth/react';
 import Image from 'next/image';
-import { Button } from '@/components/ui/button';
 
 const inter = Inter({ subsets: ['latin'] });
 
-function Layout({ children }) {
+function Layout({ centered, children }) {
     const { data: session } = useSession();
 
-    console.log(session);
+    let inner = children;
+
+    if (centered) {
+        inner = (
+            <div className="flex h-screen w-screen items-center justify-center">
+                {children}
+            </div>
+        );
+    }
 
     return (
         <main className={classNames(
@@ -68,7 +74,7 @@ function Layout({ children }) {
                 </div>
             </nav>
 
-            {children}
+            {inner}
         </main>
     );
 }
