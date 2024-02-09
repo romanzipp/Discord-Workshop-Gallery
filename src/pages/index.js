@@ -1,30 +1,34 @@
 import Image from 'next/image';
 import { useSession, signIn, signOut } from 'next-auth/react';
 import { Inter } from 'next/font/google';
+import Layout from '@/components/layout';
 
-const inter = Inter({ subsets: ['latin'] });
+function GuestPage() {}
 
 export default function Home() {
     const { data: session } = useSession();
 
-    if (session) {
+    if (!session) {
         return (
-            <>
-                Signed in as
-                {' '}
-                {session.user.email}
-                {' '}
-                <br />
-                <button onClick={() => signOut()}>Sign out</button>
-            </>
+            <Layout>
+                <div className="flex h-screen w-screen items-center justify-center">
+                    Not signed in
+                    {' '}
+                    <br />
+                    <button onClick={() => signIn()}>Sign in</button>
+                </div>
+            </Layout>
         );
     }
+
     return (
         <>
-            Not signed in
+            Signed in as
+            {' '}
+            {session.user.email}
             {' '}
             <br />
-            <button onClick={() => signIn()}>Sign in</button>
+            <button onClick={() => signOut()}>Sign out</button>
         </>
     );
 
