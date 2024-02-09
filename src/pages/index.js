@@ -346,6 +346,13 @@ function GalleryPage({ galleryData }) {
                                         <div dangerouslySetInnerHTML={{ __html: selectedMessageContent }} />
                                     )}
                                 </div>
+                                {selectedMessage.attachments?.length > 1 && (
+                                    <div className="mt-2 text-center">
+                                        {selectedMessage.attachments.length}
+                                        {' '}
+                                        images
+                                    </div>
+                                )}
                             </div>
                         </AlertDialogHeader>
                         <div className="grow px-10">
@@ -354,17 +361,28 @@ function GalleryPage({ galleryData }) {
                                     {selectedMessage.attachments?.map((attachment) => (
                                         <Fragment key={attachment.id}>
                                             <CarouselItem className="relative h-full">
-                                                <img
-                                                    src={attachment.url}
-                                                    className="absolute size-full object-contain"
-                                                    alt=""
-                                                />
+                                                <a
+                                                    href={attachment.url}
+                                                    target="_blank"
+                                                    rel="noreferrer"
+                                                >
+                                                    <img
+                                                        src={attachment.url}
+                                                        className="absolute size-full object-contain"
+                                                        alt=""
+                                                    />
+                                                </a>
                                             </CarouselItem>
                                         </Fragment>
                                     ))}
                                 </CarouselContent>
-                                <CarouselPrevious />
-                                <CarouselNext />
+
+                                {selectedMessage.attachments?.length > 1 && (
+                                    <>
+                                        <CarouselPrevious />
+                                        <CarouselNext />
+                                    </>
+                                )}
                             </Carousel>
 
                         </div>
