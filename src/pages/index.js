@@ -1,12 +1,9 @@
 import Image from 'next/image';
-import { useSession, signIn, signOut } from 'next-auth/react';
-import {
-    useState, Fragment, useMemo, useRef, useEffect, createRef,
-} from 'react';
+import { useSession, signIn } from 'next-auth/react';
+import { useState, Fragment, useMemo } from 'react';
 import { useRouter } from 'next/router';
 import moment from 'moment';
 import classNames from 'classnames';
-import Draggable from 'react-draggable';
 import Layout from '@/components/layout';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
