@@ -30,7 +30,8 @@ function Layout({ centered, children }) {
             <Head>
                 <title>Workshop Gallery</title>
             </Head>
-            <nav className="flex min-h-10 justify-between border-b border-white/30">
+            <div className={'h-10 w-full'}></div>
+            <nav className="flex fixed left-0 top-0 w-full h-10 justify-between border-b border-white/30 bg-black z-50 shadow-md">
                 <div className="flex items-center px-3 font-bold">
                     Workshop Gallery
                 </div>
