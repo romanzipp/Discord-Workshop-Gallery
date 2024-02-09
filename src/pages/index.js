@@ -20,13 +20,21 @@ import {
     SelectTrigger, Select, SelectValue, SelectContent, SelectItem,
 } from '@/components/ui/select';
 import {
-    AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger,
+    AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger, AlertDialogDescription, AlertDialogAction,
 } from '@/components/ui/alert-dialog';
 import UserPreview from '@/components/user-preview';
 import {
     Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious,
 } from '@/components/ui/carousel';
 import alertStyles from '@/styles/alert.module.css';
+
+export async function getServerSideProps({ query }) {
+    return {
+        props: {
+            hasChannel: !!query.channel,
+        },
+    };
+}
 
 function LoginPage() {
     return (
@@ -222,7 +230,7 @@ function GalleryPage({ galleryData }) {
     }, [selectedMessage]);
 
     return (
-        <Layout>
+        <>
             <div className="fixed right-0 flex h-full w-24 items-center">
                 <div className="w-full rounded-l-md border border-r-0 border-white/30 p-4 shadow-lg shadow-white/10">
                     <div className="text-center text-sm font-semibold uppercase">
@@ -380,17 +388,15 @@ function GalleryPage({ galleryData }) {
                     </AlertDialogContent>
                 </AlertDialog>
             )}
-        </Layout>
+        </>
     );
 }
 
-export default function Home() {
+export default function Home({ hasChannel }) {
     const { data: session } = useSession();
     const router = useRouter();
 
-    const [originFromBookmark, setOriginFromBookmark] = useState(!!router.query.channel);
-
-    console.log(originFromBookmark);
+    const [originFromBookmark] = useState(hasChannel);
 
     const selectedGuild = useMemo(() => router.query.guild, [router]);
     const selectedChannel = useMemo(() => router.query.channel, [router]);
@@ -423,6 +429,14 @@ export default function Home() {
         selectedGuild,
         selectedChannel,
     });
+
+    const [showBookmarkAlert, setShowBookmarkAlert] = useState(false);
+
+    useEffect(() => {
+        if (!originFromBookmark && !!selectedChannel) {
+            setShowBookmarkAlert(true);
+        }
+    }, [selectedChannel]);
 
     if (!session) {
         return <LoginPage />;
@@ -500,5 +514,30 @@ export default function Home() {
         );
     }
 
-    return <GalleryPage galleryData={galleryData} />;
+    return (
+        <Layout>
+            {(showBookmarkAlert) && (
+                <AlertDialog
+                    open={showBookmarkAlert}
+                    onOpenChange={(open) => !open && setShowBookmarkAlert(false)}
+                >
+                    <AlertDialogTrigger>Open</AlertDialogTrigger>
+                    <AlertDialogContent>
+                        <AlertDialogHeader>
+                            <AlertDialogTitle>
+                                You should bookmark this page now.
+                            </AlertDialogTitle>
+                            <AlertDialogDescription>
+                                You will not have to select your server & channel next time if you bookmark this page now!
+                            </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                            <AlertDialogAction>Ok done, thank you</AlertDialogAction>
+                        </AlertDialogFooter>
+                    </AlertDialogContent>
+                </AlertDialog>
+            )}
+            <GalleryPage galleryData={galleryData} />
+        </Layout>
+    );
 }
