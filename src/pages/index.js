@@ -106,6 +106,11 @@ function GalleryPage({ galleryData }) {
 
         const award = awards.find((a) => a.id === awardId);
 
+        // dragged any element but not an award
+        if (!award) {
+            return;
+        }
+
         setItemAwards((prevItemAwards) => {
             let tmp = [...prevItemAwards];
 
