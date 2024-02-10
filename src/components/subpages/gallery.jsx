@@ -180,7 +180,7 @@ function Gallery({ galleryData }) {
     // Selected messages
 
     const [selectedMessage, setSelectedMessage] = useState(null);
-    const [selectedMessageContent, setSelectedMessageContent] = useState(null);
+
     const [selectedMessageCarousel, setSelectedMessageCarousel] = useState(null);
     const [selectedMessageCarouselCurrentSlide, setSelectedMessageCarouselCurrentSlide] = useState(null);
 
@@ -265,26 +265,6 @@ function Gallery({ galleryData }) {
     function selectMessageNext() {
         setSelectedMessage(nextMessage);
     }
-
-    useEffect(() => {
-        (async () => {
-            if (!selectedMessage) {
-                return;
-            }
-
-            const contentHtml = await unified()
-                .use(remarkParse)
-                .use(remarkRehype)
-                .use(remarkBreaks)
-                .use(rehypeSanitize)
-                .use(rehypeStringify)
-                .process(selectedMessage.content);
-
-            setSelectedMessageContent(
-                String(contentHtml),
-            );
-        })();
-    }, [selectedMessage]);
 
     return (
         <>
@@ -391,7 +371,6 @@ function Gallery({ galleryData }) {
                     selectedMessage={selectedMessage}
                     selectedMessageAttachments={selectedMessageAttachments}
                     setSelectedMessage={setSelectedMessage}
-                    selectedMessageContent={selectedMessageContent}
                     onCarouselInit={onCarouselInit}
                     nextMessage={nextMessage}
                     prevMessage={prevMessage}

@@ -1,22 +1,50 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import {
-    AlertDialog, AlertDialogTrigger, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogFooter, AlertDialogCancel,
-} from '@/components/ui/alert-dialog';
-import alertStyles from '@/styles/alert.module.css';
-import UserPreview from '@/components/user-preview';
+import { unified } from 'unified';
+import remarkParse from 'remark-parse';
+import remarkRehype from 'remark-rehype';
+import remarkBreaks from 'remark-breaks';
+import rehypeSanitize from 'rehype-sanitize';
+import rehypeStringify from 'rehype-stringify';
+import { Button } from '@/components/ui/button';
 import {
     Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext,
 } from '@/components/ui/carousel';
-import { Button } from '@/components/ui/button';
+import UserPreview from '@/components/user-preview';
+import alertStyles from '@/styles/alert.module.css';
+import {
+    AlertDialog, AlertDialogTrigger, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogFooter, AlertDialogCancel,
+} from '@/components/ui/alert-dialog';
 
 function MessageDetails({
-    selectedMessage, selectedMessageContent, selectedMessageAttachments, setSelectedMessage, onCarouselInit, onCarouselDestroy, selectMessagePrev,
+    selectedMessage, selectedMessageAttachments, setSelectedMessage, onCarouselInit, onCarouselDestroy, selectMessagePrev,
     prevMessage,
     selectMessageNext,
     nextMessage, onClickAttachmentThumbnail,
 }) {
+    const [selectedMessageContent, setSelectedMessageContent] = useState(null);
+
+    useEffect(() => {
+        (async () => {
+            if (!selectedMessage) {
+                return;
+            }
+
+            const contentHtml = await unified()
+                .use(remarkParse)
+                .use(remarkRehype)
+                .use(remarkBreaks)
+                .use(rehypeSanitize)
+                .use(rehypeStringify)
+                .process(selectedMessage.content);
+
+            setSelectedMessageContent(
+                String(contentHtml),
+            );
+        })();
+    }, [selectedMessage]);
+
     return (
         <AlertDialog
             defaultOpen
