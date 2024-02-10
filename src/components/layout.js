@@ -30,13 +30,16 @@ function Layout({ centered, children }) {
             <Head>
                 <title>Workshop Gallery</title>
             </Head>
-            <div className={'h-10 w-full'}></div>
-            <nav className="flex fixed left-0 top-0 w-full h-10 justify-between border-b border-white/20 bg-black z-50 shadow-md">
+
+            <div className="h-10 w-full" />
+
+            <nav className="fixed left-0 top-0 z-50 flex h-10 w-full justify-between border-b border-white/20 bg-black shadow-md">
                 <div className="flex items-center px-3 font-bold">
-                    Workshop Gallery
+                    <span className="block md:hidden">WG</span>
+                    <span className="hidden md:block">Workshop Gallery</span>
                 </div>
 
-                <div className="flex gap-6 px-4 text-sm text-gray-300">
+                <div className="flex gap-4 px-3 text-sm text-gray-300 md:gap-6 md:px-4">
                     {session && (
                         <>
                             <div className="flex items-center gap-3">
@@ -49,7 +52,7 @@ function Layout({ centered, children }) {
                                         className="rounded-full"
                                     />
                                 )}
-                                <div>
+                                <div className="hidden md:block">
                                     Signed in as
                                     {' '}
                                     <span className="font-medium">
