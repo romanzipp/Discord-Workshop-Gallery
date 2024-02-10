@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import { useSession } from 'next-auth/react';
 import {
     useState, Fragment, useMemo, useEffect,
@@ -31,6 +30,7 @@ import {
 import alertStyles from '@/styles/alert.module.css';
 import BookmarkAlert from '@/components/bookmark-alert';
 import Login from '@/components/subpages/login';
+import SelectGuild from '@/components/subpages/select-guild';
 
 export async function getServerSideProps({ query }) {
     return {
@@ -588,41 +588,10 @@ export default function Home({ hasChannel }) {
 
     if (!selectedGuild) {
         return (
-            <Layout centered>
-                <div className="flex flex-col items-center gap-5">
-                    <Alert>
-                        <AlertTitle>Select the Server</AlertTitle>
-                        <AlertDescription>
-                            You need to select the server for which you want to see the gallery.
-                        </AlertDescription>
-                    </Alert>
-                    {(guildsData && guildsData?.data) && (
-                        <Select onValueChange={(value) => onSelectGuild(value)}>
-                            <SelectTrigger className="w-[180px]">
-                                <SelectValue placeholder="Select Server" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                {guildsData?.data?.map((guild) => (
-                                    <Fragment key={guild.id}>
-                                        <SelectItem value={guild.id}>
-                                            <div className="flex items-center gap-2">
-                                                <Image
-                                                    src={`https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}.png`}
-                                                    alt={guild.name}
-                                                    height={24}
-                                                    width={24}
-                                                    className="rounded-full"
-                                                />
-                                                {guild.name}
-                                            </div>
-                                        </SelectItem>
-                                    </Fragment>
-                                ))}
-                            </SelectContent>
-                        </Select>
-                    )}
-                </div>
-            </Layout>
+            <SelectGuild
+                guildsData={guildsData}
+                onSelect={(value) => onSelectGuild(value)}
+            />
         );
     }
 
