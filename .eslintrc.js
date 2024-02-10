@@ -43,6 +43,7 @@ module.exports = {
         'jsx-a11y/heading-has-content': 'off',
         'no-loop-func': 'off',
         'no-restricted-syntax': 'off',
+        'no-bitwise': 'off',
     },
     settings: {
         'import/resolver': {
