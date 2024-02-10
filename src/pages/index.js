@@ -610,32 +610,39 @@ export default function Home({ hasChannel }) {
     if (!selectedGuild) {
         return (
             <Layout centered>
-                {(guildsData && guildsData?.data) && (
-                    <Select onValueChange={(value) => onSelectGuild(value)}>
-                        <SelectTrigger className="w-[180px]">
-                            <SelectValue placeholder="Select Server" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            {guildsData?.data?.map((guild) => (
-                                <Fragment key={guild.id}>
-                                    <SelectItem value={guild.id}>
-                                        <div className="flex items-center gap-2">
-                                            <Image
-                                                src={`https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}.png`}
-                                                alt={guild.name}
-                                                height={24}
-                                                width={24}
-                                                className="rounded-full"
-                                            />
-                                            {guild.name}
-                                        </div>
-                                    </SelectItem>
-                                </Fragment>
-                            ))}
-                        </SelectContent>
-                    </Select>
-                )}
-
+                <div className="flex flex-col items-center gap-5">
+                    <Alert>
+                        <AlertTitle>Select the Server</AlertTitle>
+                        <AlertDescription>
+                            You need to select the server for which you want to see the gallery.
+                        </AlertDescription>
+                    </Alert>
+                    {(guildsData && guildsData?.data) && (
+                        <Select onValueChange={(value) => onSelectGuild(value)}>
+                            <SelectTrigger className="w-[180px]">
+                                <SelectValue placeholder="Select Server" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {guildsData?.data?.map((guild) => (
+                                    <Fragment key={guild.id}>
+                                        <SelectItem value={guild.id}>
+                                            <div className="flex items-center gap-2">
+                                                <Image
+                                                    src={`https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}.png`}
+                                                    alt={guild.name}
+                                                    height={24}
+                                                    width={24}
+                                                    className="rounded-full"
+                                                />
+                                                {guild.name}
+                                            </div>
+                                        </SelectItem>
+                                    </Fragment>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                    )}
+                </div>
             </Layout>
         );
     }
@@ -643,30 +650,50 @@ export default function Home({ hasChannel }) {
     if (!selectedChannel) {
         return (
             <Layout centered>
-                {(channelsData && channelsData?.data) ? (
-                    <div>
-                        <Select onValueChange={(value) => onSelectChannel(value)}>
-                            <SelectTrigger className="w-[180px]">
-                                <SelectValue placeholder="Select Channel" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                {channelsData?.data?.map((channel) => (
-                                    <Fragment key={channel.id}>
-                                        <SelectItem value={channel.id}>
-                                            <div className="flex items-center gap-2">
-                                                {channel.name}
-                                            </div>
-                                        </SelectItem>
-                                    </Fragment>
-                                ))}
-                            </SelectContent>
-                        </Select>
-                    </div>
-                ) : (
-                    <div>
-                        loading channels...
-                    </div>
-                )}
+                <div className="flex flex-col items-center gap-5">
+                    <Alert>
+                        <AlertTitle>Select the Channel</AlertTitle>
+                        <AlertDescription>
+                            <p>
+                                You need to select channel server for which you want to see the gallery.
+                            </p>
+                        </AlertDescription>
+                    </Alert>
+                    {(channelsData && channelsData?.data) ? (
+                        <div>
+                            <Select onValueChange={(value) => onSelectChannel(value)}>
+                                <SelectTrigger className="w-[180px]">
+                                    <SelectValue placeholder="Select Channel" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {channelsData?.data?.map((channel) => (
+                                        <Fragment key={channel.id}>
+                                            <SelectItem value={channel.id}>
+                                                <div className="flex items-center gap-2">
+                                                    {channel.name}
+                                                </div>
+                                            </SelectItem>
+                                        </Fragment>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                            <div className="mt-4">
+                                <Button
+                                    variant="link"
+                                    size="sm"
+                                    className="mx-auto"
+                                    onClick={(() => onSelectGuild(undefined))}
+                                >
+                                    Back to server selection
+                                </Button>
+                            </div>
+                        </div>
+                    ) : (
+                        <div>
+                            loading channels...
+                        </div>
+                    )}
+                </div>
             </Layout>
         );
     }
