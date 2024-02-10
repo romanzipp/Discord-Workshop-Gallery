@@ -14,8 +14,13 @@ export default async (req, res) => {
     try {
         const guildsResponse = await discord.api('/api/users/@me/guilds');
 
+        const guilds = guildsResponse.filter((guild) =>
+            // check for admin permission
+            // https://discord.com/developers/docs/topics/permissions
+            (guild.permissions & 0x0000000000000008) === 0x0000000000000008);
+
         res.send({
-            data: guildsResponse,
+            data: guilds,
         });
     } catch (err) {
         res.send({
