@@ -13,6 +13,7 @@ import remarkParse from 'remark-parse';
 import remarkRehype from 'remark-rehype';
 import { unified } from 'unified';
 import remarkBreaks from 'remark-breaks';
+import confetti from 'canvas-confetti';
 import Layout from '@/components/layout';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
@@ -76,22 +77,60 @@ function GalleryPage({ galleryData }) {
 
     const awards = [
         {
-            id: 'top-1', title: '1.', unique: true, appliedClassName: 'bg-yellow-800', badgeClassName: 'bg-gradient-to-br from-yellow-700 via-yellow-600 to-yellow-900 shadow-lg shadow-yellow-800/60 border-2 border-white/20',
+            id: 'top-1',
+            title: '1.',
+            unique: true,
+            appliedClassName: 'bg-yellow-800',
+            badgeClassName: 'bg-gradient-to-br from-yellow-700 via-yellow-600 to-yellow-900 shadow-lg shadow-yellow-800/60 border-2 border-white/20',
+            onApplied() {
+                confetti({
+                    particleCount: 200,
+                    angle: 60,
+                    spread: 70,
+                    origin: { x: -0.05 },
+                });
+                confetti({
+                    particleCount: 200,
+                    angle: 120,
+                    spread: 70,
+                    origin: { x: 1.05 },
+                });
+            },
         },
         {
-            id: 'top-2', title: '2.', unique: true, appliedClassName: 'bg-neutral-500', badgeClassName: 'bg-gradient-to-br from-neutral-500 via-neutral-400 to-neutral-700 shadow-md shadow-neutral-700/70 border-2 border-white/20',
+            id: 'top-2',
+            title: '2.',
+            unique: true,
+            appliedClassName: 'bg-neutral-500',
+            badgeClassName: 'bg-gradient-to-br from-neutral-500 via-neutral-400 to-neutral-700 shadow-md shadow-neutral-700/70 border-2 border-white/20',
         },
         {
-            id: 'top-3', title: '3.', unique: true, appliedClassName: 'bg-amber-900', badgeClassName: 'bg-gradient-to-br from-amber-800 via-amber-700 to-amber-950 shadow-md shadow-amber-900/60 border-2 border-white/20',
+            id: 'top-3',
+            title: '3.',
+            unique: true,
+            appliedClassName: 'bg-amber-900',
+            badgeClassName: 'bg-gradient-to-br from-amber-800 via-amber-700 to-amber-950 shadow-md shadow-amber-900/60 border-2 border-white/20',
         },
         {
-            id: 'top-4', title: '4.', unique: true, appliedClassName: 'bg-emerald-950', badgeClassName: 'bg-emerald-800',
+            id: 'top-4',
+            title: '4.',
+            unique: true,
+            appliedClassName: 'bg-emerald-950',
+            badgeClassName: 'bg-emerald-800',
         },
         {
-            id: 'top-5', title: '5.', unique: true, appliedClassName: 'bg-sky-950', badgeClassName: 'bg-sky-800',
+            id: 'top-5',
+            title: '5.',
+            unique: true,
+            appliedClassName: 'bg-sky-950',
+            badgeClassName: 'bg-sky-800',
         },
         {
-            id: 'additional', title: '❤️', unique: false, appliedClassName: 'bg-gray-950', badgeClassName: 'bg-gray-900',
+            id: 'additional',
+            title: '❤️',
+            unique: false,
+            appliedClassName: 'bg-gray-950',
+            badgeClassName: 'bg-gray-900',
         },
     ];
 
@@ -129,6 +168,10 @@ function GalleryPage({ galleryData }) {
                 { messageId, award },
             ];
         });
+
+        if (award.onApplied) {
+            award.onApplied();
+        }
     }
 
     const awardBadges = useMemo(() => awards.map((award) => ({
