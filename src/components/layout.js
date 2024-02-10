@@ -46,6 +46,11 @@ function Layout({ centered, children }) {
                     sizes="16x16"
                     href="/favicon-16x16.png"
                 />
+                <script
+                    defer
+                    data-domain="workshop-gallery.ich.wtf"
+                    src="https://p.ich.wtf/js/script.js"
+                />
             </Head>
 
             <div className="h-10 w-full" />
