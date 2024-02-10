@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { signIn } from 'next-auth/react';
 import Layout from '@/components/layout';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
