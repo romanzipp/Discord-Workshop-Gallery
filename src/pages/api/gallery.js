@@ -38,13 +38,15 @@ export default async (req, res) => {
                 hasDivider = hasDivider || messageIsDivider(message.content);
 
                 if (hasDivider) {
-                    return false;
+                    return;
+                }
+
+                if (message.attachments.size === 0) {
+                    return;
                 }
 
                 allMessages[message.id] = message;
                 before = message.id;
-
-                return true;
             });
 
             if (hasDivider || i >= 10) {
