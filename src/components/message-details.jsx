@@ -1,4 +1,6 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import React, {
+    Fragment, useEffect, useState, useMemo,
+} from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { unified } from 'unified';
@@ -18,12 +20,63 @@ import {
 } from '@/components/ui/alert-dialog';
 
 function MessageDetails({
-    selectedMessage, selectedMessageAttachments, setSelectedMessage, onCarouselInit, onCarouselDestroy, selectMessagePrev,
+    selectedMessage,
+    setSelectedMessage,
+    selectMessagePrev,
     prevMessage,
     selectMessageNext,
-    nextMessage, onClickAttachmentThumbnail,
+    nextMessage,
 }) {
     const [selectedMessageContent, setSelectedMessageContent] = useState(null);
+
+    const [selectedMessageCarousel, setSelectedMessageCarousel] = useState(null);
+    const [selectedMessageCarouselCurrentSlide, setSelectedMessageCarouselCurrentSlide] = useState(null);
+
+    function onCarouselSettle(api) {
+        const slideInView = api.slidesInView().find(() => true);
+
+        setSelectedMessageCarouselCurrentSlide(slideInView);
+    }
+
+    const selectedMessageAttachments = useMemo(() => {
+        if (!selectedMessage) {
+            return [];
+        }
+
+        const { attachments } = selectedMessage;
+
+        if (!selectedMessageCarousel) {
+            return attachments;
+        }
+
+        return attachments.map((attachment, index) => ({
+            ...attachment,
+            active: selectedMessageCarouselCurrentSlide === index,
+        }));
+    }, [selectedMessageCarousel, selectedMessage, selectedMessageCarouselCurrentSlide]);
+
+    function onCarouselDestroy() {
+        if (!selectedMessageCarousel) {
+            return;
+        }
+
+        selectedMessageCarousel.off('settle', onCarouselSettle);
+    }
+
+    function onCarouselInit(api) {
+        api.on('settle', onCarouselSettle);
+
+        setSelectedMessageCarouselCurrentSlide(0);
+        setSelectedMessageCarousel(api);
+    }
+
+    function onClickAttachmentThumbnail(attachment, index) {
+        if (!selectedMessageCarousel) {
+            return;
+        }
+
+        selectedMessageCarousel.scrollTo(index);
+    }
 
     useEffect(() => {
         (async () => {
