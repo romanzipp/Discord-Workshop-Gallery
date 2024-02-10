@@ -412,12 +412,9 @@ function GalleryPage({ galleryData }) {
 }
 
 export default function Home({ hasChannel }) {
+    const { publicRuntimeConfig } = getConfig();
     const { data: session } = useSession();
     const router = useRouter();
-
-    const { publicRuntimeConfig } = getConfig();
-
-    const preselectChannelId = process.env.PRESELECT_CHANNEL_ID;
 
     const [originFromBookmark] = useState(hasChannel);
 
