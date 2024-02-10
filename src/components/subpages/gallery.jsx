@@ -1,24 +1,10 @@
 import {
-    useState, Fragment, useMemo, useEffect,
+    useState, Fragment, useMemo, useCallback,
 } from 'react';
 import confetti from 'canvas-confetti';
-import { unified } from 'unified';
-import remarkParse from 'remark-parse';
-import remarkRehype from 'remark-rehype';
-import remarkBreaks from 'remark-breaks';
-import rehypeSanitize from 'rehype-sanitize';
-import rehypeStringify from 'rehype-stringify';
 import classNames from 'classnames';
 import moment from 'moment/moment';
 import UserPreview from '@/components/user-preview';
-import {
-    AlertDialog, AlertDialogTrigger, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogFooter, AlertDialogCancel,
-} from '@/components/ui/alert-dialog';
-import alertStyles from '@/styles/alert.module.css';
-import {
-    Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext,
-} from '@/components/ui/carousel';
-import { Button } from '@/components/ui/button';
 import MessageDetails from '@/components/message-details';
 
 function findClosestMessage(el) {
@@ -209,13 +195,13 @@ function Gallery({ galleryData }) {
         return [next, prev];
     }, [selectedMessage, computedMessages]);
 
-    function selectMessagePrev() {
+    const selectMessagePrev = useCallback(() => {
         setSelectedMessage(prevMessage);
-    }
+    });
 
-    function selectMessageNext() {
+    const selectMessageNext = useCallback(() => {
         setSelectedMessage(nextMessage);
-    }
+    });
 
     return (
         <>
