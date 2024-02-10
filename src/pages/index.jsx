@@ -29,6 +29,7 @@ import {
     Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious,
 } from '@/components/ui/carousel';
 import alertStyles from '@/styles/alert.module.css';
+import BookmarkAlert from '@/components/bookmark-alert';
 
 export async function getServerSideProps({ query }) {
     return {
@@ -709,26 +710,12 @@ export default function Home({ hasChannel }) {
     return (
         <Layout>
             {(showBookmarkAlert) && (
-                <AlertDialog
-                    open={showBookmarkAlert}
-                    onOpenChange={(open) => !open && setShowBookmarkAlert(false)}
-                >
-                    <AlertDialogTrigger>Open</AlertDialogTrigger>
-                    <AlertDialogContent>
-                        <AlertDialogHeader>
-                            <AlertDialogTitle>
-                                You should bookmark this page now.
-                            </AlertDialogTitle>
-                            <AlertDialogDescription>
-                                You will not have to select your server & channel next time if you bookmark this page now!
-                            </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
-                            <AlertDialogAction>Ok done, thank you</AlertDialogAction>
-                        </AlertDialogFooter>
-                    </AlertDialogContent>
-                </AlertDialog>
+                <BookmarkAlert
+                    show={showBookmarkAlert}
+                    onClose={() => setShowBookmarkAlert(false)}
+                />
             )}
+
             <GalleryPage galleryData={galleryData} />
         </Layout>
     );
