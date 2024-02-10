@@ -1,7 +1,6 @@
 import React, {
     Fragment, useEffect, useState, useMemo,
 } from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { unified } from 'unified';
 import remarkParse from 'remark-parse';
