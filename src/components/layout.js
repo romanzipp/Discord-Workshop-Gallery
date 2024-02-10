@@ -64,8 +64,8 @@ function Layout({ centered, children }) {
                                     <Image
                                         src={session.user.image}
                                         alt={session.user.name}
-                                        width={30}
-                                        height={30}
+                                        width={24}
+                                        height={24}
                                         className="rounded-full"
                                     />
                                 )}
