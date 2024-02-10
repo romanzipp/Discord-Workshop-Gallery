@@ -174,10 +174,58 @@ function GalleryPage({ galleryData }) {
         award: itemAwards.find((itemAward) => itemAward.messageId === message.id)?.award,
     })), [galleryData, itemAwards, awards]);
 
-    // Component
+    // Selected messages
 
     const [selectedMessage, setSelectedMessage] = useState(null);
     const [selectedMessageContent, setSelectedMessageContent] = useState(null);
+    const [selectedMessageCarousel, setSelectedMessageCarousel] = useState(null);
+    const [selectedMessageCarouselCurrentSlide, setSelectedMessageCarouselCurrentSlide] = useState(null);
+
+    function onCarouselSettle(api) {
+        const slideInView = api.slidesInView().find(() => true);
+
+        setSelectedMessageCarouselCurrentSlide(slideInView);
+    }
+
+    const selectedMessageAttachments = useMemo(() => {
+        if (!selectedMessage) {
+            return [];
+        }
+
+        const { attachments } = selectedMessage;
+
+        if (!selectedMessageCarousel) {
+            return attachments;
+        }
+
+        return attachments.map((attachment, index) => ({
+            ...attachment,
+            active: selectedMessageCarouselCurrentSlide === index,
+        }));
+    }, [selectedMessageCarousel, selectedMessage, selectedMessageCarouselCurrentSlide]);
+
+    function onCarouselDestroy() {
+        if (!selectedMessageCarousel) {
+            return;
+        }
+
+        selectedMessageCarousel.off('settle', onCarouselSettle);
+    }
+
+    function onCarouselInit(api) {
+        api.on('settle', onCarouselSettle);
+
+        setSelectedMessageCarouselCurrentSlide(0);
+        setSelectedMessageCarousel(api);
+    }
+
+    function onClickAttachmentThumbnail(attachment, index) {
+        if (!selectedMessageCarousel) {
+            return;
+        }
+
+        selectedMessageCarousel.scrollTo(index);
+    }
 
     const [nextMessage, prevMessage] = useMemo(() => {
         if (!selectedMessage) {
@@ -352,17 +400,14 @@ function GalleryPage({ galleryData }) {
                                         <div dangerouslySetInnerHTML={{ __html: selectedMessageContent }} />
                                     )}
                                 </div>
-                                {selectedMessage.attachments?.length > 1 && (
-                                    <div className="mt-2 text-center">
-                                        {selectedMessage.attachments.length}
-                                        {' '}
-                                        images
-                                    </div>
-                                )}
                             </div>
                         </AlertDialogHeader>
-                        <div className="grow px-10">
-                            <Carousel className="h-full">
+                        <div className="flex grow flex-col px-10">
+                            <Carousel
+                                onInit={(api) => onCarouselInit(api)}
+                                onDestroy={(api) => onCarouselDestroy(api)}
+                                className="grow"
+                            >
                                 <CarouselContent className="h-full">
                                     {selectedMessage.attachments?.map((attachment) => (
                                         <Fragment key={attachment.id}>
@@ -391,6 +436,28 @@ function GalleryPage({ galleryData }) {
                                 )}
                             </Carousel>
 
+                            {selectedMessageAttachments?.length > 1 && (
+                                <div className="mb-2 flex h-24 justify-center gap-4 pt-6">
+                                    {selectedMessageAttachments?.map((attachment, index) => (
+                                        <Fragment key={attachment.id}>
+                                            <button
+                                                onClick={() => onClickAttachmentThumbnail(attachment, index)}
+                                                type="button"
+                                                className="block h-full"
+                                            >
+                                                <img
+                                                    src={attachment.url}
+                                                    className={classNames(
+                                                        attachment.active ? '' : 'opacity-60',
+                                                        'h-full rounded-md object-contain',
+                                                    )}
+                                                    alt=""
+                                                />
+                                            </button>
+                                        </Fragment>
+                                    ))}
+                                </div>
+                            )}
                         </div>
                         <AlertDialogFooter className="gap-4">
                             <Button

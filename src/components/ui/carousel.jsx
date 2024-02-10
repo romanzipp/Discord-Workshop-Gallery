@@ -25,6 +25,8 @@ const Carousel = React.forwardRef((
         plugins,
         className,
         children,
+        onInit,
+        onDestroy,
         ...props
     },
     ref,
@@ -80,8 +82,16 @@ const Carousel = React.forwardRef((
         api.on('reInit', onSelect);
         api.on('select', onSelect);
 
+        if (onInit){
+            onInit(api)
+        }
+
         return () => {
             api?.off('select', onSelect);
+
+            if (onDestroy){
+                onDestroy(api)
+            }
         };
     }, [api, onSelect]);
 
