@@ -369,7 +369,7 @@ function GalleryPage({ galleryData }) {
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 gap-4 p-4 pr-32 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6">
+            <div className="grid grid-cols-1 gap-4 p-4 pr-32 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 2xl:grid-cols-6">
                 {computedMessages.map((message) => (
                     <div
                         key={message.id}
@@ -404,9 +404,9 @@ function GalleryPage({ galleryData }) {
                         )}
 
                         {message.author && (
-                            <div className="flex items-center justify-between gap-2 text-sm font-medium">
+                            <div className="flex items-center justify-between gap-3 text-sm font-medium">
                                 <UserPreview author={message.author} />
-                                <div className="text-xs text-white/60">
+                                <div className="truncate text-xs text-white/60">
                                     {moment(message.createdTimestamp).fromNow()}
                                 </div>
                             </div>

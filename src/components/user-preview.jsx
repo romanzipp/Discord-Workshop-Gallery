@@ -9,7 +9,7 @@ function UserPreview({ author }) {
                 alt={author.username}
                 height={24}
                 width={24}
-                className="rounded-full"
+                className="whitespace-nowrap rounded-full"
             />
             {author.globalName}
         </div>
