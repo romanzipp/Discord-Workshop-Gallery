@@ -15,11 +15,7 @@ import remarkBreaks from 'remark-breaks';
 import confetti from 'canvas-confetti';
 import Layout from '@/components/layout';
 import { Button } from '@/components/ui/button';
-import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import { useGallery, useGuilds, useChannels } from '@/lib/api';
-import {
-    SelectTrigger, Select, SelectValue, SelectContent, SelectItem,
-} from '@/components/ui/select';
 import {
     AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger, AlertDialogDescription, AlertDialogAction,
 } from '@/components/ui/alert-dialog';
@@ -31,6 +27,7 @@ import alertStyles from '@/styles/alert.module.css';
 import BookmarkAlert from '@/components/bookmark-alert';
 import Login from '@/components/subpages/login';
 import SelectGuild from '@/components/subpages/select-guild';
+import SelectChannel from '@/components/subpages/select-channel';
 
 export async function getServerSideProps({ query }) {
     return {
@@ -597,52 +594,11 @@ export default function Home({ hasChannel }) {
 
     if (!selectedChannel) {
         return (
-            <Layout centered>
-                <div className="flex flex-col items-center gap-5">
-                    <Alert>
-                        <AlertTitle>Select the Channel</AlertTitle>
-                        <AlertDescription>
-                            <p>
-                                You need to select channel server for which you want to see the gallery.
-                            </p>
-                        </AlertDescription>
-                    </Alert>
-                    {(channelsData && channelsData?.data) ? (
-                        <div>
-                            <Select onValueChange={(value) => onSelectChannel(value)}>
-                                <SelectTrigger className="w-[180px]">
-                                    <SelectValue placeholder="Select Channel" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    {channelsData?.data?.map((channel) => (
-                                        <Fragment key={channel.id}>
-                                            <SelectItem value={channel.id}>
-                                                <div className="flex items-center gap-2">
-                                                    {channel.name}
-                                                </div>
-                                            </SelectItem>
-                                        </Fragment>
-                                    ))}
-                                </SelectContent>
-                            </Select>
-                            <div className="mt-4">
-                                <Button
-                                    variant="link"
-                                    size="sm"
-                                    className="mx-auto"
-                                    onClick={(() => onSelectGuild(undefined))}
-                                >
-                                    Back to server selection
-                                </Button>
-                            </div>
-                        </div>
-                    ) : (
-                        <div>
-                            loading channels...
-                        </div>
-                    )}
-                </div>
-            </Layout>
+            <SelectChannel
+                channelsData={channelsData}
+                onSelect={(value) => onSelectChannel(value)}
+                onBack={() => onSelectGuild(undefined)}
+            />
         );
     }
 
