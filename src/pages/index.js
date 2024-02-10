@@ -3,6 +3,7 @@ import { useSession, signIn } from 'next-auth/react';
 import {
     useState, Fragment, useMemo, useEffect,
 } from 'react';
+import getConfig from 'next/config';
 import { useRouter } from 'next/router';
 import moment from 'moment';
 import classNames from 'classnames';
@@ -414,6 +415,10 @@ export default function Home({ hasChannel }) {
     const { data: session } = useSession();
     const router = useRouter();
 
+    const { publicRuntimeConfig } = getConfig();
+
+    const preselectChannelId = process.env.PRESELECT_CHANNEL_ID;
+
     const [originFromBookmark] = useState(hasChannel);
 
     const selectedGuild = useMemo(() => router.query.guild, [router]);
@@ -448,7 +453,37 @@ export default function Home({ hasChannel }) {
         selectedChannel,
     });
 
+    // Preselect guild
+
+    useEffect(() => {
+        if (selectedGuild || !guildsData || !publicRuntimeConfig.preselectGuildId) {
+            return;
+        }
+
+        const foundPreselectGuild = guildsData?.data?.find((guild) => guild.id === publicRuntimeConfig.preselectGuildId);
+
+        if (foundPreselectGuild) {
+            onSelectGuild(foundPreselectGuild.id);
+        }
+    }, [guildsData, selectedGuild, publicRuntimeConfig]);
+
     const [showBookmarkAlert, setShowBookmarkAlert] = useState(false);
+
+    // Preselect chanel
+
+    useEffect(() => {
+        if (selectedChannel || !channelsData || !publicRuntimeConfig.preselectChannelId) {
+            return;
+        }
+
+        const foundPreselectChannel = channelsData?.data?.find((channel) => channel.id === publicRuntimeConfig.preselectChannelId);
+
+        if (foundPreselectChannel) {
+            onSelectChannel(foundPreselectChannel.id);
+        }
+    }, [channelsData, selectedChannel, publicRuntimeConfig]);
+
+    // Show bookmark alert
 
     useEffect(() => {
         if (!originFromBookmark && !!selectedChannel) {
