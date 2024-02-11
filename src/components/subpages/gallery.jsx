@@ -4,6 +4,7 @@ import {
 import confetti from 'canvas-confetti';
 import classNames from 'classnames';
 import moment from 'moment/moment';
+import Image from 'next/image';
 import UserPreview from '@/components/user-preview';
 import MessageDetails from '@/components/message-details';
 
@@ -263,9 +264,11 @@ function Gallery({ galleryData }) {
                             <div>
                                 {message.attachments?.filter((attachment, index) => index < 1)?.map((attachment) => (
                                     <div key={attachment.id}>
-                                        <img
+                                        <Image
+                                            height={500}
+                                            width={500}
+                                            quality={95}
                                             src={attachment.url}
-                                            alt=""
                                         />
                                     </div>
                                 ))}
