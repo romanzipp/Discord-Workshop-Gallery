@@ -1,5 +1,5 @@
 import {
-    useState, Fragment, useMemo, useCallback,
+    useState, Fragment, useMemo, useCallback, useEffect,
 } from 'react';
 import confetti from 'canvas-confetti';
 import classNames from 'classnames';
@@ -82,6 +82,13 @@ function Gallery({ galleryData }) {
     ];
 
     const [itemAwards, setItemAwards] = useState([]);
+
+    useEffect(() => {
+        if (itemAwards.length > 0) {
+            // eslint-disable-next-line no-undef
+            window.onbeforeunload = () => 'Are you sure you want to leave?';
+        }
+    }, [itemAwards]);
 
     function resetAwards() {
         setItemAwards([]);
