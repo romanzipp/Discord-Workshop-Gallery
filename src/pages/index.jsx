@@ -42,18 +42,18 @@ export default function Home({ hasChannel }) {
         });
     }
 
-    const { data: galleryData } = useGallery({
+    const { data: galleryData, isLoading: isLoadingGallery, error: galleryError } = useGallery({
         session,
         selectedGuild,
         selectedChannel,
     });
 
-    const { data: guildsData } = useGuilds({
+    const { data: guildsData, isLoading: isLoadingGuilds } = useGuilds({
         session,
         selectedGuild,
     });
 
-    const { data: channelsData } = useChannels({
+    const { data: channelsData, isLoading: isLoadingChannels } = useChannels({
         session,
         selectedGuild,
         selectedChannel,
@@ -104,6 +104,7 @@ export default function Home({ hasChannel }) {
     if (!selectedGuild) {
         return (
             <SelectGuild
+                isLoading={isLoadingGuilds}
                 guildsData={guildsData}
                 onSelect={(value) => onSelectGuild(value)}
             />
@@ -113,6 +114,7 @@ export default function Home({ hasChannel }) {
     if (!selectedChannel) {
         return (
             <SelectChannel
+                isLoading={isLoadingChannels}
                 channelsData={channelsData}
                 onSelect={(value) => onSelectChannel(value)}
                 onBack={() => onSelectGuild(undefined)}
@@ -120,10 +122,28 @@ export default function Home({ hasChannel }) {
         );
     }
 
-    if (!galleryData || !galleryData?.data) {
+    if (isLoadingGallery) {
+        return (
+            <Layout loading>
+                loading images...
+            </Layout>
+        );
+    }
+
+    if (galleryError) {
+        console.error(galleryError);
+
         return (
             <Layout centered>
-                loading messages...
+                error loading images. see console for more information.
+            </Layout>
+        );
+    }
+
+    if (!galleryData) {
+        return (
+            <Layout centered>
+                no images found.
             </Layout>
         );
     }

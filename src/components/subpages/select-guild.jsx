@@ -6,7 +6,15 @@ import {
     Select, SelectTrigger, SelectValue, SelectContent, SelectItem,
 } from '@/components/ui/select';
 
-function SelectGuild({ guildsData, onSelect }) {
+function SelectGuild({ guildsData, isLoading, onSelect }) {
+    if (isLoading) {
+        return (
+            <Layout loading>
+                loading servers...
+            </Layout>
+        );
+    }
+
     return (
         <Layout centered>
             <div className="flex flex-col items-center gap-5">

@@ -6,7 +6,17 @@ import {
 } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
 
-function SelectChannel({ channelsData, onSelect, onBack }) {
+function SelectChannel({
+    channelsData, isLoading, onSelect, onBack,
+}) {
+    if (isLoading) {
+        return (
+            <Layout loading>
+                loading channels...
+            </Layout>
+        );
+    }
+
     return (
         <Layout centered>
             <div className="flex flex-col items-center gap-5">
