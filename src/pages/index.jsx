@@ -140,7 +140,7 @@ export default function Home({ hasChannel }) {
         );
     }
 
-    if (!galleryData) {
+    if (!galleryData || !galleryData.data || galleryData.data.length === 0) {
         return (
             <Layout centered>
                 no images found.
