@@ -62,6 +62,8 @@ export default async (req, res) => {
 
     const messagesResponse = await discord;
 
+    console.log('gallery response:', messagesResponse);
+
     res.send({
         data: messagesResponse,
     });
