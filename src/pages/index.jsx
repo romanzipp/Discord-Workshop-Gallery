@@ -97,6 +97,11 @@ export default function Home({ hasChannel }) {
         }
     }, [selectedChannel]);
 
+    console.log('session:', session);
+    console.log('selectedGuild:', selectedGuild);
+    console.log('selectedChannel:', selectedChannel);
+    console.log('galleryData:', galleryData);
+
     if (!session) {
         return <Login />;
     }

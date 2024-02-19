@@ -18,6 +18,8 @@ export default async (req, res) => {
 
     const channelsResponse = await discord;
 
+    console.log('channels response:', channelsResponse);
+
     res.send({
         data: channelsResponse,
     });
