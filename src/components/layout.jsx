@@ -81,8 +81,8 @@ function Layout({ centered, loading, children }) {
                 />
                 <script
                     defer
-                    data-domain="workshop-gallery.ich.wtf"
-                    src="https://p.ich.wtf/js/script.js"
+                    src="https://u.romanzipp.cloud/script.js"
+                    data-website-id="3a512281-32d6-4720-9002-7b3b1b9cac7e"
                 />
             </Head>
 
